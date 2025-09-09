@@ -18,5 +18,5 @@ func drawTrack() -> void:
 	for point in path.curve.get_baked_points():  
 		line.add_point(point + path.position)
 	get_parent().add_child.call_deferred(line)
-	## PathFollow processed line
+	## PathFollow processed track
 	
