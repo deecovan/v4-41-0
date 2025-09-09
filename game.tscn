@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddexfdtsjou7d"]
+
+[ext_resource type="PackedScene" uid="uid://cq3l3bqld866f" path="res://scenes/main.tscn" id="1_e2o6t"]
+[ext_resource type="Script" uid="uid://b0tdtspvfq8wa" path="res://scripts/main.gd" id="2_feb5d"]
+[ext_resource type="Script" uid="uid://iafji55g3r8d" path="res://scripts/track.gd" id="3_feb5d"]
+
+[sub_resource type="Curve2D" id="Curve2D_fc0e3"]
+_data = {
+"points": PackedVector2Array(127.482, -0.124103, -128, 0, 384, 512, 0, 64, 0, -64, 64, 385, 0, 64, 0, -64, 64, 192, -64, 0, 64, 0, 256, 64, -64, 0, 64, 0, 576, 192, 0, -64, 0, 64, 896, 192, 128, 0, -128, 0, 576, 512, 0, 0, 0, 0, 384, 512)
+}
+point_count = 8
+
+[node name="Game" type="Node2D"]
+
+[node name="Main" parent="." instance=ExtResource("1_e2o6t")]
+script = ExtResource("2_feb5d")
+
+[node name="Track" type="Node2D" parent="Main"]
+script = ExtResource("3_feb5d")
+
+[node name="Path2D" type="Path2D" parent="Main/Track"]
+curve = SubResource("Curve2D_fc0e3")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Main/Track/Path2D"]
+position = Vector2(384, 512)
+rotation = 3.14159
