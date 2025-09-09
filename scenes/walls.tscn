@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsmbenpgu4g88"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_def3t"]
+size = Vector2(20, 10)
+
+[node name="Walls" type="Node2D"]
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="RigidBody2D"]
+offset_left = -10.0
+offset_top = -21.0
+offset_right = 10.0
+offset_bottom = -11.0
+
+[node name="ColorRect2" type="ColorRect" parent="RigidBody2D"]
+offset_left = -10.0
+offset_top = 11.0
+offset_right = 10.0
+offset_bottom = 21.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_def3t")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_def3t")
