@@ -46,11 +46,11 @@ offset_right = 183.0
 offset_bottom = 255.0
 text = "State:
 Speed:
-Fwd G:
-Side G:
-Sum G:
-Last:
-Best:"
+Lat:
+vW:
+Gforce:
+     Lap:
+    Best:"
 
 [node name="State" type="Label" parent="Main/Race/Control"]
 layout_mode = 0

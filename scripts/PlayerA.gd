@@ -19,7 +19,7 @@ var gConst: float = 9.8
 var gMod: float = 5.0 ## to calculate gConst * gMod
 ## Each car must be configured
 ## acceleration limit in g. 
-## 2g equals 2 * 98 = 196  ~200 px/s*s
+## 2g equals 2 * 9.8 = 19.6  ~20px/s*s * gMod = 100px/s*s
 @export var longitude_acc_limit := 2.0 
 @export var longitude_decl_limit := 3.0 ## decceleration/braking limit in g.
 @export var longitude_coast := -0.01 ## coasting speed delta.
