@@ -1,11 +1,26 @@
-[gd_scene load_steps=2 format=3 uid="uid://dsmbenpgu4g88"]
+[gd_scene load_steps=4 format=3 uid="uid://dsmbenpgu4g88"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_def3t"]
+rough = true
+bounce = 1.0
+absorbent = true
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_def3t"]
 size = Vector2(20, 10)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_yax5h"]
+rough = true
+bounce = 1.0
+absorbent = true
+
 [node name="Walls" type="Node2D"]
+z_index = 500
 
 [node name="RigidBody2D" type="RigidBody2D" parent="."]
+z_index = 500
+physics_material_override = SubResource("PhysicsMaterial_def3t")
+linear_damp = 1.0
+angular_damp = 1.0
 
 [node name="ColorRect" type="ColorRect" parent="RigidBody2D"]
 offset_left = -10.0
@@ -13,16 +28,24 @@ offset_top = -21.0
 offset_right = 10.0
 offset_bottom = -11.0
 
-[node name="ColorRect2" type="ColorRect" parent="RigidBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+z_index = 500
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_def3t")
+
+[node name="RigidBody2D2" type="RigidBody2D" parent="."]
+z_index = 500
+physics_material_override = SubResource("PhysicsMaterial_yax5h")
+linear_damp = 1.0
+angular_damp = 1.0
+
+[node name="ColorRect2" type="ColorRect" parent="RigidBody2D2"]
 offset_left = -10.0
 offset_top = 11.0
 offset_right = 10.0
 offset_bottom = 21.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
-position = Vector2(0, -16)
-shape = SubResource("RectangleShape2D_def3t")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="RigidBody2D"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RigidBody2D2"]
+z_index = 500
 position = Vector2(0, 16)
 shape = SubResource("RectangleShape2D_def3t")

@@ -1,12 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://c0mc0r6m88auy"]
+[gd_scene load_steps=9 format=3 uid="uid://c0mc0r6m88auy"]
 
-[ext_resource type="Script" uid="uid://b5gqxi42wtsfh" path="res://scripts/PlayerA.gd" id="1_khco6"]
-[ext_resource type="Texture2D" uid="uid://b4qtfx47oknbu" path="res://Art/Cars/cyan.png" id="2_2ekgg"]
-[ext_resource type="PackedScene" path="res://scenes/CyanPoint.tscn" id="3_str8i"]
-[ext_resource type="Texture2D" uid="uid://clcxa8k2ox3cj" path="res://Art/Cars/cyan_right.png" id="4_8iv3w"]
+[ext_resource type="Texture2D" uid="uid://oe2q3hpr7u80" path="res://Art/Cars/cyan.png" id="2_2ekgg"]
+[ext_resource type="PackedScene" uid="uid://b4ky68tisr70d" path="res://scenes/CyanPoint.tscn" id="3_str8i"]
+[ext_resource type="Texture2D" uid="uid://cbm40phomwsnf" path="res://Art/Cars/cyan_right.png" id="4_8iv3w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ibbax"]
-size = Vector2(32, 16)
+size = Vector2(34, 18)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wc20p"]
 atlas = ExtResource("2_2ekgg")
@@ -44,9 +43,9 @@ animations = [{
 
 [node name="PlayerA" type="CharacterBody2D"]
 z_index = 500
-script = ExtResource("1_khco6")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 500
 shape = SubResource("RectangleShape2D_ibbax")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

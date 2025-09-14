@@ -1,5 +1,6 @@
 extends Node2D
 
+## Main control keys for window and game
 func _process(_delta):
 	if Input.is_action_just_pressed('reload'):
 		get_tree().reload_current_scene()
@@ -8,3 +9,4 @@ func _process(_delta):
 		var is_window: bool = mode != DisplayServer.WINDOW_MODE_FULLSCREEN
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN \
 			if is_window else DisplayServer.WINDOW_MODE_WINDOWED)
+			

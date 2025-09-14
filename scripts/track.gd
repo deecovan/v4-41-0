@@ -1,15 +1,13 @@
 extends Node2D
 
-var path: Path2D
-var pathFollow: PathFollow2D
+var path: PathFollow2D
 var line: Line2D
-@export var trackDetails: int = 30
-@export var wallsPackedScene: PackedScene
+
+var trackDetails: int = 20
 var loadedWalls
 
 func _ready() -> void:
-	path = $Path2D
-	pathFollow = $Path2D/PathFollow2D
+	path = find_child("Path")
 	loadedWalls = preload("res://scenes/walls.tscn")
 	drawTrack()
 
@@ -24,18 +22,18 @@ func drawTrack() -> void:
 	var lastPoint = Vector2.ZERO
 	var lastUnusedPoint = Vector2.ZERO
 	var i = 0
-	for point in path.curve.get_baked_points():
-		var diretionTo = lastUnusedPoint.direction_to(point).angle()
+	for point in self.curve.get_baked_points():
+		var directionTo = lastUnusedPoint.direction_to(point).angle()
 		var distanceTo = Vector2(lastPoint - point).length()
 		if distanceTo > trackDetails and lastUnusedPoint != Vector2.ZERO:
 			var newWalls = loadedWalls.instantiate()
 			newWalls.name = "walls" + str(i)
 			i += 1
 			newWalls.position = point
-			newWalls.rotation = diretionTo
+			newWalls.rotation = directionTo
 			add_child(newWalls)
 			lastPoint = point
-			#printt(lastPoint, point, diretionTo)
+			#printt(lastPoint, point, directionTo)
 		lastUnusedPoint = point
 		
 		line.add_point(point)
