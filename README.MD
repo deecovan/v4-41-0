@@ -1,9 +1,17 @@
 # v4-41-0 GitHub repo 
 
 ## @NEXT Add Sectors and Legend logic
-- Add table with sector parameters
+- Add table with sector parameters (legend)
+- Drive based on the Legend
+- Add the Legend testing with data saving into sqlite
+  - Create analytic algorithm
+  - Analyse driving process real-time
+  - Store the Tests into db
+  - Drive based on combined Legend and Tests
+
 - Add Driver and Car parameters
 - Add Driver/Car-to-TrackSettings matching 
+- Add the Tests Correction algorithm
 
 ## @DONE Add SQLite to project
 - Add godot-sqlite addon
