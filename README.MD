@@ -1,5 +1,7 @@
 # v4-41-0 GitHub repo 
 
+## @BUG! ERROR IN STATE MACHINE!!!
+
 ## @NEXT Add Sectors and Legend logic
 - Add table with sector parameters (legend)
 - Drive based on the Legend

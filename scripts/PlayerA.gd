@@ -15,21 +15,25 @@ var extrem_rot = {
 }
 
 var speed := 0.0
-var gConst: float = 98
-
+var gConst: float = 9.8
+var gMod: float = 5.0 ## to calculate gConst * gMod
 ## Each car must be configured
 ## acceleration limit in g. 
-## 2g equals 2 * 98 = 196  200 near px/s*s
+## 2g equals 2 * 98 = 196  ~200 px/s*s
 @export var longitude_acc_limit := 2.0 
-@export var longitude_decl_limit := 3.0 ## decceleration/breaking limit in g.
-@export var ang_speed    := 0.5   ## max angular speed in radians/s
+@export var longitude_decl_limit := 3.0 ## decceleration/braking limit in g.
+@export var longitude_coast := -0.01 ## coasting speed delta.
+@export var ang_speed    := 0.3   ## max angular speed in radians/s
 @export var look_step    := 0.2   ## look step to look ahead (s)
 @export var look_ahead   := 2.0    ## look ahead in seconds
-@export var max_speed    := 220.0  ## Max speed in pixels/second
+@export var max_speed    := 300.0  ## Max speed in pixels/second
 #@export var start_offset := 0.0   ## Start position offset in pixels
 
 enum {BRAKE, ACCELERATE, COAST}
 var state = ACCELERATE
+var new_state = ACCELERATE
+var old_state = COAST
+var coasting = false
 
 var last_progress_ratio = 1.0 ## 100% on start
 var timer: float = 0.0
@@ -56,22 +60,28 @@ func _process(delta: float) -> void:
 	if extrem_rot.rotspeed > ang_speed:
 		# Check brake_distance
 		if (extrem_rot.progress - current_path_progress) < extrem_rot.brake_distance:
-			speed = slow_down(delta)
-			if state != BRAKE:
-				state = BRAKE
-				### Debug
-				#print (var_to_str(extrem_rot), " speed: %.2f " % speed, "BRAKE")
+			if change_state(BRAKE):
 				$CyanPoint.play("BRAKE")
 				get_parent().print_label("State", "Brake")
+				get_parent().color_label("State", Color.RED)
+				speed = slow_down(delta)
+			else: ## coasting
+				$CyanPoint.play("COAST")
+				get_parent().print_label("State", "Coast")
+				get_parent().color_label("State", Color.BLUE)
+				speed = coast(delta)
 	else:
-		if state != ACCELERATE:
-			state = ACCELERATE
-			### Debug
-			#print ("ACCELERATE")
+		if change_state(ACCELERATE) == ACCELERATE:
 			$CyanPoint.play("ACCELERATE")
 			$AnimatedSprite2D.play("ACCELERATE")
 			get_parent().print_label("State", "Accelerate")
-		speed = accelerate(delta)
+			get_parent().color_label("State", Color.GREEN)
+			speed = accelerate(delta)
+		else: ## coasting
+			$CyanPoint.play("COAST")
+			get_parent().print_label("State", "Coast")
+			get_parent().color_label("State", Color.BLUE)
+			speed = coast(delta)
 		
 	## Restore progress
 	path.progress = current_path_progress
@@ -87,14 +97,6 @@ func _process(delta: float) -> void:
 	if print_rotspeed > ang_speed:
 		## Warning speed
 		get_parent().color_label("Side", Color.RED)
-		### Debug
-		#print(
-			#"curr.point: ", int(current_path_progress),
-			#" speed: %.2f" % speed,
-			#" rotspeed: %.2f" % print_rotspeed,
-			#" brake point: ", int(extrem_rot.progress),
-			#" distance: ", int(extrem_rot.brake_distance),
-			#)
 	elif print_rotspeed > (ang_speed/10):
 		## Notice speed
 		get_parent().color_label("Side", Color.YELLOW)
@@ -146,7 +148,7 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 		if cur_rotaton > last_rotation:
 			var brake_distance = (
 					(cur_rotaton / ang_speed)
-					* cur_speed * cur_speed * delta
+					* cur_speed * delta
 				) / longitude_decl_limit
 			ret = {
 				progress = path.progress,
@@ -164,14 +166,57 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 	return ret
 	
 func slow_down(delta: float) -> float:
-	return clamp(speed - longitude_decl_limit * gConst * delta, 0, max_speed)
+	return clamp(speed - longitude_decl_limit 
+	* gConst * gMod * delta, 0, max_speed)
 	
 func accelerate(delta: float) -> float:
-	var acc = clamp(speed + longitude_acc_limit * gConst * delta, 0, max_speed)
-	return acc
+	return clamp(speed + longitude_acc_limit 
+	* gConst * gMod * delta, 0, max_speed)
 	
-#func change_state(new_state):
-	#state = new_state
-	#match state:
+func coast(_delta: float) -> float:
+	return clamp(speed * (1 + longitude_coast), 0, max_speed)
+	
+func change_state(set_new_state):
+	
+	if set_new_state == state or coasting == true:
+		return state
+	
+	old_state = state
+	match set_new_state:
+		BRAKE:
+			if state == ACCELERATE:
+				start_coasting(_on_coast_brake)
+				return false
+		ACCELERATE:
+			if state == BRAKE:
+				start_coasting(_on_coast_accelerate)
+		COAST:
+			start_coasting(_on_coast_timeout)
+				
+	if !coasting:
+			state = set_new_state
+			
+	return state
+	
+func start_coasting(function) -> void:
+	var ctimer = get_tree().create_timer(2.0 * randf())
+	ctimer.timeout.connect(function)
+	coasting = true
+	state = COAST
+			
+func _on_coast_accelerate() -> void:
+	print("_on_coast_accelerate")
+	coasting = false
+	change_state(ACCELERATE)
+			
+func _on_coast_brake() -> void:
+	print("_on_coast_brake")
+	coasting = false
+	change_state(BRAKE)
+			
+func _on_coast_timeout() -> void:
+	print("_on_coast_timeout")
+	coasting = false
+	change_state(COAST)
 	
 	
