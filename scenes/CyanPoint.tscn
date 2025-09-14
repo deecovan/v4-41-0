@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://b4ky68tisr70d"]
+
+[ext_resource type="Texture2D" uid="uid://dp05prv66kxhp" path="res://Art/Squares/green.bmp" id="1_hyleq"]
+[ext_resource type="Texture2D" uid="uid://blcudqnvp1o4a" path="res://Art/Squares/red.bmp" id="2_p6mfi"]
+[ext_resource type="Texture2D" uid="uid://383iuo88gtqr" path="res://Art/Squares/blue.bmp" id="3_cdw4w"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3y7la"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_hyleq")
+}],
+"loop": true,
+"name": &"ACCELERATE",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_p6mfi")
+}],
+"loop": true,
+"name": &"BRAKE",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_cdw4w")
+}],
+"loop": true,
+"name": &"COAST",
+"speed": 5.0
+}]
+
+[node name="CyanPoint" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_3y7la")
+animation = &"COAST"

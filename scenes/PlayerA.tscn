@@ -1,0 +1,62 @@
+[gd_scene load_steps=10 format=3 uid="uid://c0mc0r6m88auy"]
+
+[ext_resource type="Script" uid="uid://b5gqxi42wtsfh" path="res://scripts/PlayerA.gd" id="1_khco6"]
+[ext_resource type="Texture2D" uid="uid://b4qtfx47oknbu" path="res://Art/Cars/cyan.png" id="2_2ekgg"]
+[ext_resource type="PackedScene" path="res://scenes/CyanPoint.tscn" id="3_str8i"]
+[ext_resource type="Texture2D" uid="uid://clcxa8k2ox3cj" path="res://Art/Cars/cyan_right.png" id="4_8iv3w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ibbax"]
+size = Vector2(32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wc20p"]
+atlas = ExtResource("2_2ekgg")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wc3vj"]
+atlas = ExtResource("2_2ekgg")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ax6nr"]
+atlas = ExtResource("4_8iv3w")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_11wwl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wc20p")
+}],
+"loop": true,
+"name": &"ACCELERATE",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wc3vj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ax6nr")
+}],
+"loop": true,
+"name": &"TURN",
+"speed": 1.0
+}]
+
+[node name="PlayerA" type="CharacterBody2D"]
+z_index = 500
+script = ExtResource("1_khco6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ibbax")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 2
+texture = ExtResource("2_2ekgg")
+
+[node name="CyanPoint" parent="." instance=ExtResource("3_str8i")]
+scale = Vector2(0.5, 0.5)
+animation = &"ACCELERATE"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_11wwl")
+animation = &"TURN"
