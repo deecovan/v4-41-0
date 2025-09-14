@@ -142,7 +142,6 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 		path.progress = cur_path_progress + check_position
 		var check_rotation = path.global_rotation
 		var cur_rotaton = abs (abs(check_rotation) - abs(check_rotation_from))
-		print(cur_rotaton)
 		$CyanPoint.hide()
 		if cur_rotaton > last_rotation:
 			var brake_distance = (

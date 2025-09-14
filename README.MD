@@ -1,10 +1,13 @@
 # v4-41-0 GitHub repo 
 
 ## @NEXT Add Sectors and Legend logic
-- RTFM SQLite in GoDot
 - Add table with sector parameters
 - Add Driver and Car parameters
 - Add Driver/Car-to-TrackSettings matching 
+
+## @DONE Add SQLite to project
+- Add godot-sqlite addon
+- Test it
 
 ## @DONE Add cars
 - RTFM RigidBody physics
