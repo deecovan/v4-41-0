@@ -2,6 +2,9 @@ extends Node2D
 
 var track: Path2D
 var path: PathFollow2D
+## Car original size 32 x 16 px (4 x 2 meters)
+## 1 meter == 8 pixels
+var meter: float ## get from Track.meter
 
 var mem = {
 	tick  = 0,   ## counted
@@ -15,8 +18,8 @@ var extrem_rot = {
 }
 
 var speed := 0.0
-var gConst: float = 9.8
-var gMod: float = 5.0 ## to calculate gConst * gMod
+var gConst := 9.8
+var gMod := 1.0 ## to calculate gConst * gMod
 ## Each car must be configured
 ## acceleration limit in g. 
 ## 2g equals 2 * 9.8 = 19.6  ~20px/s*s * gMod = 100px/s*s
@@ -26,7 +29,9 @@ var gMod: float = 5.0 ## to calculate gConst * gMod
 @export var ang_speed    := 0.3   ## max angular speed in radians/s
 @export var look_step    := 0.2   ## look step to look ahead (s)
 @export var look_ahead   := 2.0    ## look ahead in seconds
-@export var max_speed    := 300.0  ## Max speed in pixels/second
+## Max speed in meter/second
+## 300 km/h = 83 m/s = 264 px/s
+@export var max_speed    := 264
 #@export var start_offset := 0.0   ## Start position offset in pixels
 
 enum {BRAKE, ACCELERATE, COAST}
@@ -35,7 +40,7 @@ var new_state = ACCELERATE
 var old_state = COAST
 var coasting = false
 
-var last_progress_ratio = 1.0 ## 100% on start
+var last_progress_ratio = 0.0 ## 100% on start
 var timer: float = 0.0
 var tick: int = 0
 var leaf: int = 0
@@ -56,6 +61,7 @@ func _process(delta: float) -> void:
 	extrem_rot = find_extrem_rotation(
 		current_path_progress, speed, look_ahead, look_step, _delta)
 	$CyanPoint.show()
+	
 	
 	if extrem_rot.rotspeed > ang_speed:
 		# Check brake_distance
@@ -141,6 +147,7 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 	var last_rotation := 0.0
 	for i in range(int(ahead/step), 0, -1):
 		var check_position = i * step * cur_speed
+		## \Old Logic
 		path.progress = cur_path_progress + check_position
 		var check_rotation = path.global_rotation
 		var cur_rotaton = abs (abs(check_rotation) - abs(check_rotation_from))
@@ -158,10 +165,14 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 			$CyanPoint.global_position = path.global_position
 			$CyanPoint.global_rotation = path.global_rotation
 			
-			
 		last_rotation = cur_rotaton
 		check_rotation_from = check_rotation
+		## /Old Logic
 		
+		### \New Logic
+		### @TODO think about it
+		### /New Logic
+
 	path.progress = remember_path_progress
 	return ret
 	

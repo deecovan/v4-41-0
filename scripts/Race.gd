@@ -12,14 +12,13 @@ func _ready() -> void:
 	for player in players:
 		player.track = self.find_child("Track")
 		player.path = player.track.find_child("Path")
-		printt(player.track, player.path)
+		player.meter = player.track.meter
 	control = self.find_child("Control")
 		
 func print_label(label: StringName, text: String) -> void:
 	var is_label = control.find_child(label)
 	if is_label:
 		is_label.text = text
-
 	
 func color_label(label: StringName, color: Color) -> void:
 	var is_label = control.find_child(label)

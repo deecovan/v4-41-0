@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cbm40phomwsnf" path="res://Art/Cars/cyan_right.png" id="4_8iv3w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ibbax"]
-size = Vector2(34, 18)
+size = Vector2(32, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wc20p"]
 atlas = ExtResource("2_2ekgg")
@@ -43,22 +43,23 @@ animations = [{
 
 [node name="PlayerA" type="CharacterBody2D"]
 z_index = 500
+motion_mode = 1
+safe_margin = 0.1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 500
 shape = SubResource("RectangleShape2D_ibbax")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture_filter = 2
+texture_filter = 1
 texture = ExtResource("2_2ekgg")
 
 [node name="CyanPoint" parent="." instance=ExtResource("3_str8i")]
 scale = Vector2(0.5, 0.5)
-animation = &"ACCELERATE"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_11wwl")
-animation = &"TURN"
+animation = &"ACCELERATE"
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true

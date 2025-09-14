@@ -24,13 +24,13 @@ angular_damp = 1.0
 
 [node name="ColorRect" type="ColorRect" parent="RigidBody2D"]
 offset_left = -10.0
-offset_top = -21.0
+offset_top = -32.0
 offset_right = 10.0
-offset_bottom = -11.0
+offset_bottom = -22.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
 z_index = 500
-position = Vector2(0, -16)
+position = Vector2(0, -27)
 shape = SubResource("RectangleShape2D_def3t")
 
 [node name="RigidBody2D2" type="RigidBody2D" parent="."]
@@ -41,11 +41,11 @@ angular_damp = 1.0
 
 [node name="ColorRect2" type="ColorRect" parent="RigidBody2D2"]
 offset_left = -10.0
-offset_top = 11.0
+offset_top = 22.0
 offset_right = 10.0
-offset_bottom = 21.0
+offset_bottom = 32.0
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="RigidBody2D2"]
 z_index = 500
-position = Vector2(0, 16)
+position = Vector2(0, 27)
 shape = SubResource("RectangleShape2D_def3t")
