@@ -10,13 +10,22 @@ func _ready():
 	if db.open_db() != true:
 		print("Error opening database: ", db.error_message)
 	else:
-		print("Database opened successfully.")
 		# Example: Create a table if it doesn't exist
-		var query = "CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
+		var query = "CREATE TABLE IF NOT EXISTS 
+		players (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
 		if db.query(query) != true:
 			print("Error creating table: ", db.error_message)
 		else:
-			print("Table created or already exists.")
+			var rand = RandomNumberGenerator.new()
+			var player_name = str(rand.randi() * rand.randi())
+			query = "INSERT INTO players(name) VALUES (" + player_name + ");"
+			if db.query(query) != true:
+				print("Error in query: ", query, db.error_message)
+			else:
+				query = "SELECT * FROM players ORDER BY id DESC LIMIT 2;"
+				print(query, " > ", db.query(query))
+				if not db.query_result.is_empty():
+					print(var_to_str(db.query_result))
 		db.close_db()
 
 ## Main control keys for window and game

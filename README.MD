@@ -1,7 +1,7 @@
 # v4-41-0 GitHub repo 
 
 ## @BUG! ERROR IN STATE MACHINE!!!
-- Also fix Meters
+* Also fix Meters
 - Also calculate vW
 
 ## @NEXT Add Sectors and Legend logic
