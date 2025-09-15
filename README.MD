@@ -2,8 +2,9 @@
 
 ## @FIXED error in state machime
 - Added AWAIT state with mistakes changing pedals
-- @TODO change  or remove coast when it see apex
-- @TODO change angle detection to Vw
+- @TODO 
+  1. change angle detection to Vw
+  2. change  or remove coast when it see apex
 
 ## @NEXT Add Sectors and Legend logic
 - Add table with sector parameters (legend)
