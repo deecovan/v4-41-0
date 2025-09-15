@@ -5,10 +5,10 @@ var path: PathFollow2D
 var line1: Line2D
 var line2: Line2D
 
-## Car original size 32 x 16 px (4 x 2 meters)
-## 1 meter == 8 pixels
-@export var meter = 8.0
-## Details destribution 20 pixels !PLUS Pathath step
+## Car original size 32 x 16 px (3.2 x 1.6 meters)
+## 1 meter == 10 pixels
+@export var meter = 10.0
+## Details destribution 20 pixels !PLUS Path step
 @export var trackDetails: int = 20 
 ## Walls(Paper Boxes) size 20
 var loadedWalls

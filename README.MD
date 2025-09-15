@@ -1,7 +1,9 @@
 # v4-41-0 GitHub repo 
 
-## @BUG! ERROR IN STATE MACHINE!!!
-- Disable FSM to return to old working logic
+## @FIXED error in state machime
+- Added AWAIT state with mistakes changing pedals
+- @TODO change  or remove coast when it see apex
+- @TODO change angle detection to Vw
 
 ## @NEXT Add Sectors and Legend logic
 - Add table with sector parameters (legend)
