@@ -63,29 +63,31 @@ func _process(delta: float) -> void:
 		current_path_progress, speed, look_ahead, look_step, _delta)
 	$CyanPoint.show()
 	
-	
+	## If it see Apex (Extremum point 
+	## with angular speed more than allowed for current speed) 
 	if extrem_rot.rotspeed > ang_speed:
 		# Check brake_distance
 		if (extrem_rot.progress - current_path_progress) < extrem_rot.brake_distance:
 			if change_state(BRAKE):
 				$CyanPoint.play("BRAKE")
+				$AnimatedSprite2D.play("BRAKE")
 				get_parent().print_label("State", "Brake")
 				get_parent().color_label("State", Color.RED)
 				speed = slow_down(delta)
-			else: ## coasting
-				$CyanPoint.play("COAST")
-				get_parent().print_label("State", "Coast")
-				get_parent().color_label("State", Color.BLUE)
-				speed = coast(delta)
-	else:
-		if change_state(ACCELERATE) == ACCELERATE:
+	
+	## It dont see Apex 
+	elif change_state(ACCELERATE):
 			$CyanPoint.play("ACCELERATE")
 			$AnimatedSprite2D.play("ACCELERATE")
 			get_parent().print_label("State", "Accelerate")
 			get_parent().color_label("State", Color.GREEN)
 			speed = accelerate(delta)
-		else: ## coasting
+	
+	## State changed and start_coasting timer started with 
+	## next _on_coast_accelerate or _on_coast_brake call
+	if state == COAST:
 			$CyanPoint.play("COAST")
+			$AnimatedSprite2D.play("COAST")
 			get_parent().print_label("State", "Coast")
 			get_parent().color_label("State", Color.BLUE)
 			speed = coast(delta)
@@ -111,7 +113,6 @@ func _process(delta: float) -> void:
 	## Print into Control Overlay
 	get_parent().print_label("Speed", "%.2f" % speed)
 	get_parent().print_label("Vw", "%.2f" % (print_cacc))
-	## \\\
 	if print_cacc > centrifugal_acc_limit:
 		## Warning acceleration
 		get_parent().color_label("Vw", Color.RED)
@@ -121,7 +122,8 @@ func _process(delta: float) -> void:
 	else:
 		## Normal acceleration
 		get_parent().color_label("Vw", Color.WHITE)
-	## ///
+	
+	## Lap tracking and debug message
 	if path.progress_ratio < last_progress_ratio:
 		print ("===============================================================",
 		" Lap: ", lap_tick, " time: %.2f" % timer)
@@ -129,7 +131,7 @@ func _process(delta: float) -> void:
 		lap_tick += 1
 		timer = 0.0
 		
-	# Detect side of rotation and play animation under braking
+	## Detect side of rotation and play animation under braking
 	if state == BRAKE :
 		if abs(global_rotation)-abs(path.global_rotation) > 0:
 			$AnimatedSprite2D.flip_v = true
@@ -157,7 +159,8 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 	}
 	var check_rotation_from = path.global_rotation
 	var last_rotation := 0.0
-	## \Old Logic
+
+	## Look ahead
 	for i in range(int(ahead/step), 0, -1):
 		var check_position = i * step * cur_speed
 		path.progress = cur_path_progress + check_position
@@ -179,11 +182,6 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 			
 		last_rotation = cur_rotaton
 		check_rotation_from = check_rotation
-	## /Old Logic
-	
-	### \New Logic
-	### @TODO think about it
-	### /New Logic
 
 	path.progress = remember_path_progress
 	return ret
@@ -199,26 +197,24 @@ func accelerate(delta: float) -> float:
 func coast(_delta: float) -> float:
 	return clamp(speed * (1 + longitude_coast), 0, max_speed)
 	
-func change_state(set_new_state):
+func change_state(set_new_state) -> bool:
 	if set_new_state == state:
-		return state
+		return true
 	match set_new_state:
 		BRAKE:
 			if state == ACCELERATE:
 				start_coasting(_on_coast_brake)
-				return COAST
+				return false
 			elif state == COAST:
-				return BRAKE
+				return true
 		ACCELERATE:
 			if state == BRAKE:
 				start_coasting(_on_coast_accelerate)
-				return COAST
+				return false
 			elif state == COAST:
-				return ACCELERATE
-		COAST:
-			return COAST
-			
-	return COAST
+				return true
+	# if COAST	
+	return true
 	
 func start_coasting(function) -> void:
 	var ctimer = get_tree().create_timer(2.0 * randf())

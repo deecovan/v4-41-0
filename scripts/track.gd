@@ -33,14 +33,21 @@ func drawTrack() -> void:
 	## Side Line width 8 meters
 	line2.width = meter * 8
 	line1.z_index = 488
+	
+	for point in self.curve.get_baked_points():	
+		line1.add_point(point)
+		line2.add_point(point)
+		
+	get_parent().add_child.call_deferred(line1)
+	get_parent().add_child.call_deferred(line2)
+
 	## Draw walls
 	# Remember Last Point to find rotation vector from it
-	var lastPoint = Vector2.ZERO
-	var lastUnusedPoint = Vector2.ZERO
-	var i = 0
-	for point in self.curve.get_baked_points():
-		var directionTo = lastUnusedPoint.direction_to(point).angle()
-		var distanceTo = Vector2(lastPoint - point).length()
+	#var lastPoint = Vector2.ZERO
+	#var lastUnusedPoint = Vector2.ZERO
+	#for point in self.curve.get_baked_points():
+		#var directionTo = lastUnusedPoint.direction_to(point).angle()
+		#var distanceTo = Vector2(lastPoint - point).length()
 		## Draw Paper Boxes(Walls) distributed by trackDetails pixels
 		#if distanceTo > trackDetails and lastUnusedPoint != Vector2.ZERO:
 			#var newWalls = loadedWalls.instantiate()
@@ -51,10 +58,5 @@ func drawTrack() -> void:
 			#add_child(newWalls)
 			#lastPoint = point
 			##printt(lastPoint, point, directionTo)
-		lastUnusedPoint = point
+		#lastUnusedPoint = point
 		
-		line1.add_point(point)
-		line2.add_point(point)
-		
-	get_parent().add_child.call_deferred(line1)
-	get_parent().add_child.call_deferred(line2)

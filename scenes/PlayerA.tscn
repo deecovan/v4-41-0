@@ -31,6 +31,22 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_wc20p")
+}],
+"loop": true,
+"name": &"BRAKE",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wc20p")
+}],
+"loop": true,
+"name": &"COAST",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_wc3vj")
 }, {
 "duration": 1.0,
@@ -59,4 +75,4 @@ scale = Vector2(0.5, 0.5)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_11wwl")
-animation = &"ACCELERATE"
+animation = &"COAST"
