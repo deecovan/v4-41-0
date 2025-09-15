@@ -26,6 +26,9 @@ var gMod := 1.0 ## to calculate gConst * gMod
 @export var longitude_acc_limit := 2.0 
 @export var longitude_decl_limit := 3.0 ## decceleration/braking limit in g.
 @export var longitude_coast := -0.01 ## coasting speed delta.
+@export var centrifugal_acc_limit = 3 ## Limit Centrifugal Acceleration
+@export var centrifugal_acc_gate = 1 ## (Limit-Gate) = Good Acceleration
+@export var max_rotspeed_value = 100 ## Key to calculate rotation speed
 @export var ang_speed    := 0.3   ## max angular speed in radians/s
 @export var look_step    := 0.2   ## look step to look ahead (s)
 @export var look_ahead   := 2.0    ## look ahead in seconds
@@ -37,8 +40,6 @@ var gMod := 1.0 ## to calculate gConst * gMod
 enum {BRAKE, ACCELERATE, COAST}
 var state = ACCELERATE
 var new_state = ACCELERATE
-var old_state = COAST
-var coasting = false
 
 var last_progress_ratio = 0.0 ## 100% on start
 var timer: float = 0.0
@@ -91,25 +92,36 @@ func _process(delta: float) -> void:
 		
 	## Restore progress
 	path.progress = current_path_progress
+	## Store current path rotation
+	var prev_path_global_rotation = path.global_rotation
 	## Update progress
 	path.progress  += speed * delta
-	
+	## Get delta rotation
+	var delta_rotspeed_value = \
+		abs( abs(prev_path_global_rotation)
+		   - abs(path.global_rotation) ) / delta
+	var delta_rotspeed = delta_rotspeed_value / max_rotspeed_value
 	# Prints debug info if current rotspeed reach the limits.
-	var print_rotspeed = abs (
-			abs(global_rotation)
-			- abs(path.global_rotation))
+	var print_rotspeed = \
+		abs( abs(global_rotation) 
+		   - abs(path.global_rotation) )
+	## a=Vw, <- Fц =m(V^2)/r = m(w^2)r = m(V/r)wr = mVw = Pw,
+	## calc Centrifugal Acceleration, must be in range [min..max]
+	var print_cacc = speed * delta_rotspeed
+	## Print into Control Overlay
 	get_parent().print_label("Speed", "%.2f" % speed)
-	get_parent().print_label("Side", "%.2f" % (print_rotspeed * PI))
-	if print_rotspeed > ang_speed:
-		## Warning speed
-		get_parent().color_label("Side", Color.RED)
-	elif print_rotspeed > (ang_speed/10):
-		## Notice speed
-		get_parent().color_label("Side", Color.YELLOW)
+	get_parent().print_label("Vw", "%.2f" % (print_cacc))
+	## \\\
+	if print_cacc > centrifugal_acc_limit:
+		## Warning acceleration
+		get_parent().color_label("Vw", Color.RED)
+	elif print_rotspeed > (centrifugal_acc_limit - centrifugal_acc_gate):
+		## Notice acceleration
+		get_parent().color_label("Vw", Color.YELLOW)
 	else:
-		## Normal speed
-		get_parent().color_label("Side", Color.WHITE)
-	
+		## Normal acceleration
+		get_parent().color_label("Vw", Color.WHITE)
+	## ///
 	if path.progress_ratio < last_progress_ratio:
 		print ("===============================================================",
 		" Lap: ", lap_tick, " time: %.2f" % timer)
@@ -145,9 +157,9 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 	}
 	var check_rotation_from = path.global_rotation
 	var last_rotation := 0.0
+	## \Old Logic
 	for i in range(int(ahead/step), 0, -1):
 		var check_position = i * step * cur_speed
-		## \Old Logic
 		path.progress = cur_path_progress + check_position
 		var check_rotation = path.global_rotation
 		var cur_rotaton = abs (abs(check_rotation) - abs(check_rotation_from))
@@ -167,11 +179,11 @@ func find_extrem_rotation(cur_path_progress, cur_speed, ahead, step, delta):
 			
 		last_rotation = cur_rotaton
 		check_rotation_from = check_rotation
-		## /Old Logic
-		
-		### \New Logic
-		### @TODO think about it
-		### /New Logic
+	## /Old Logic
+	
+	### \New Logic
+	### @TODO think about it
+	### /New Logic
 
 	path.progress = remember_path_progress
 	return ret
@@ -188,46 +200,36 @@ func coast(_delta: float) -> float:
 	return clamp(speed * (1 + longitude_coast), 0, max_speed)
 	
 func change_state(set_new_state):
-	
-	if set_new_state == state or coasting == true:
+	if set_new_state == state:
 		return state
-	
-	old_state = state
 	match set_new_state:
 		BRAKE:
 			if state == ACCELERATE:
 				start_coasting(_on_coast_brake)
-				return false
+				return COAST
+			elif state == COAST:
+				return BRAKE
 		ACCELERATE:
 			if state == BRAKE:
 				start_coasting(_on_coast_accelerate)
+				return COAST
+			elif state == COAST:
+				return ACCELERATE
 		COAST:
-			start_coasting(_on_coast_timeout)
-				
-	if !coasting:
-			state = set_new_state
+			return COAST
 			
-	return state
+	return COAST
 	
 func start_coasting(function) -> void:
 	var ctimer = get_tree().create_timer(2.0 * randf())
-	ctimer.timeout.connect(function)
-	coasting = true
 	state = COAST
-			
+	ctimer.timeout.connect(function)
+	print(str(function))
+
 func _on_coast_accelerate() -> void:
 	print("_on_coast_accelerate")
-	coasting = false
 	change_state(ACCELERATE)
 			
 func _on_coast_brake() -> void:
 	print("_on_coast_brake")
-	coasting = false
 	change_state(BRAKE)
-			
-func _on_coast_timeout() -> void:
-	print("_on_coast_timeout")
-	coasting = false
-	change_state(COAST)
-	
-	

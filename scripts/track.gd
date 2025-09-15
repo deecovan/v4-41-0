@@ -42,15 +42,15 @@ func drawTrack() -> void:
 		var directionTo = lastUnusedPoint.direction_to(point).angle()
 		var distanceTo = Vector2(lastPoint - point).length()
 		## Draw Paper Boxes(Walls) distributed by trackDetails pixels
-		if distanceTo > trackDetails and lastUnusedPoint != Vector2.ZERO:
-			var newWalls = loadedWalls.instantiate()
-			newWalls.name = "walls" + str(i)
-			i += 1
-			newWalls.position = point
-			newWalls.rotation = directionTo
-			add_child(newWalls)
-			lastPoint = point
-			#printt(lastPoint, point, directionTo)
+		#if distanceTo > trackDetails and lastUnusedPoint != Vector2.ZERO:
+			#var newWalls = loadedWalls.instantiate()
+			#newWalls.name = "walls" + str(i)
+			#i += 1
+			#newWalls.position = point
+			#newWalls.rotation = directionTo
+			#add_child(newWalls)
+			#lastPoint = point
+			##printt(lastPoint, point, directionTo)
 		lastUnusedPoint = point
 		
 		line1.add_point(point)

@@ -1,8 +1,6 @@
 # v4-41-0 GitHub repo 
 
 ## @BUG! ERROR IN STATE MACHINE!!!
-* Also fix Meters
-- Also calculate vW
 
 ## @NEXT Add Sectors and Legend logic
 - Add table with sector parameters (legend)
@@ -16,6 +14,9 @@
 - Add Driver and Car parameters
 - Add Driver/Car-to-TrackSettings matching 
 - Add the Tests Correction algorithm
+
+## @DONE Calculate Vw
+- Add calculate Vw
 
 ## @DONE Add SQLite to project
 - Add godot-sqlite addon

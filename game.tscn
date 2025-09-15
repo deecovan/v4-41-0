@@ -9,9 +9,9 @@
 [sub_resource type="Curve2D" id="Curve2D_feb5d"]
 bake_interval = 10.0
 _data = {
-"points": PackedVector2Array(0, 0, -128, 0, 512, 560, 88, 0, -88, 0, 128, 560, 0, 112, 0, -112, 40, 448, 0, 0, 0, -64, 40, 128, -128, 0, 64, 0, 256, 40, -64, 0, 0, 0, 384, 128, 0, 0, 64, 0, 576, 128, -64, 0, 64, 0, 832, 40, 0, -64, 0, 0, 920, 128, 0, 0, 0, 64, 920, 448, 128, 0, 0, 0, 704, 560, 0, 0, 0, 0, 512, 560)
+"points": PackedVector2Array(0, 0, -128, 0, 512, 560, 0, 0, -64, 0, 128, 560, 0, 64, 0, 0, 40, 448, 0, 0, 0, -64, 40, 128, -64, 0, 0, 0, 128, 40, 0, 0, 64, 0, 256, 40, -64, 0, 0, 0, 384, 128, 0, 0, 64, 0, 576, 128, -64, 0, 64, 0, 832, 40, 0, -64, 0, 0, 920, 128, 0, 0, 0, 64, 920, 448, 128, 0, 0, 0, 704, 560, 0, 0, 0, 0, 512, 560)
 }
-point_count = 12
+point_count = 13
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_7jktm")
@@ -37,6 +37,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 960.0
 offset_bottom = 600.0
+metadata/_edit_lock_ = true
 
 [node name="Label" type="Label" parent="Main/Race/Control"]
 layout_mode = 0
@@ -47,7 +48,7 @@ offset_bottom = 255.0
 text = "State:
 Speed:
 Lat:
-vW:
+Vw:
 Gforce:
      Lap:
     Best:"
@@ -76,7 +77,7 @@ offset_right = 232.0
 offset_bottom = 203.0
 text = "0.0"
 
-[node name="Side" type="Label" parent="Main/Race/Control"]
+[node name="Vw" type="Label" parent="Main/Race/Control"]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 206.0
