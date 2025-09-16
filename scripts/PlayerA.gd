@@ -18,8 +18,10 @@ var extrem_rot = {
 }
 
 var params = {
-	param_await = 0.2,
-	error_await = 0.2
+	param_await = 0.1, ## Time to change pedals
+	error_await = 0.1, ## Add 0..0.2 to param
+	param_balls = 0.2, ## Time to coast when braking
+	error_balls = 0.2, ## Add 0..1 to param
 }
 
 var speed := 0.0
@@ -28,19 +30,18 @@ var gMod := 1.0 ## to calculate gConst * gMod
 ## Each car must be configured
 ## acceleration limit in g. 
 ## 2g equals 2 * 9.8 = 19.6  ~20px/s*s * gMod = 100px/s*s
-@export var longitude_acc_limit := 3.0 
-@export var longitude_decl_limit := 3.0 ## decceleration/braking limit in g.
+@export var longitude_acc_limit := 2.0 
+@export var longitude_decl_limit := 2.0 ## decceleration/braking limit in g.
 @export var longitude_coast := -0.01 ## coasting speed delta.
-@export var centrifugal_acc_limit = 3 ## Limit Centrifugal Acceleration
-@export var centrifugal_acc_gate = 1 ## (Limit-Gate) = Good Acceleration
-@export var max_rotspeed_value = 100 ## Key to calculate rotation speed
-@export var ang_speed    := 0.3   ## max angular speed in radians/s
+@export var centrifugal_acc_limit = 2.0 ## Limit Centrifugal Acceleration
+@export var centrifugal_acc_gate = 1 ## Good Acceleration gate
+@export var max_rotspeed_value = 100 ## Key to calculate rotation speed, 10px^2
+@export var ang_speed    := 0.2   ## max angular speed in radians/s
 @export var look_step    := 0.2   ## look step to look ahead (s)
 @export var look_ahead   := 3.0    ## look ahead in seconds
 ## Max speed in meter/second
 ## 216 km/h = 60 m/s = 216 px/s
 @export var max_speed    := 216
-#@export var start_offset := 0.0   ## Start position offset in pixels
 
 enum {BRAKE, ACCELERATE, COAST, AWAIT}
 var state = ACCELERATE
@@ -52,7 +53,12 @@ var tick: int = 0
 var leaf: int = 0
 var lap_tick: int = 0
 
+var player_balls = 0.0
+
 func _process(delta: float) -> void:
+	## Set Player's Balls distance
+	if player_balls == 0.0:
+		player_balls = params.param_balls + randf() * params.error_balls
 	timer += delta
 	tick += 1
 	var _delta = timer / float(tick)
@@ -73,7 +79,10 @@ func _process(delta: float) -> void:
 	## with angular speed more than allowed for current speed) 
 	if extrem_rot.rotspeed > ang_speed:
 		# Check brake_distance and start brake
-		if (extrem_rot.progress - current_path_progress) < extrem_rot.brake_distance:
+		var brake_distance = extrem_rot.progress - current_path_progress
+		var balls_distance = brake_distance + player_balls * speed
+		## 1. Brake distance
+		if brake_distance < extrem_rot.brake_distance:
 			if change_state(BRAKE):
 				#print("change_state(BRAKE)")
 				$CyanPoint.play("BRAKE")
@@ -81,11 +90,11 @@ func _process(delta: float) -> void:
 				get_parent().print_label("State", "Brake")
 				get_parent().color_label("State", Color.RED)
 				speed = slow_down(delta)
-		# If not in brake_distance than start coast
-		else:
+		## 2. If not in brake distance than start coast
+		elif balls_distance < extrem_rot.brake_distance:
 			change_state(COAST)
 	
-	## It dont see Apex 
+	## It dont see Apex or out of balls distance
 	elif change_state(ACCELERATE):
 			#print("change_state(ACCELERATE)")
 			$CyanPoint.play("ACCELERATE")
@@ -256,7 +265,7 @@ func change_state(set_new_state) -> bool:
 	
 func start_coasting(function) -> void:
 	#print("start_coasting(function)",var_to_str(function))
-	## Calculate player's await time
+	## Calculate Player's await time
 	var ctime = params.param_await + randf() * params.error_await
 	var ctimer = get_tree().create_timer(ctime)
 	state = AWAIT

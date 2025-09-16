@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bwj5vxxqu500h" path="res://scripts/Game.gd" id="1_7jktm"]
 [ext_resource type="Script" uid="uid://chedx0unwitio" path="res://scripts/Race.gd" id="2_7jktm"]
 [ext_resource type="Script" uid="uid://47qk4m2i4ar8" path="res://scripts/PlayerA.gd" id="3_feb5d"]
-[ext_resource type="Script" uid="uid://w1r3nkkhlqhp" path="res://scripts/Track.gd" id="4_7jktm"]
+[ext_resource type="Script" uid="uid://w1r3nkkhlqhp" path="res://scripts/track.gd" id="4_7jktm"]
 [ext_resource type="PackedScene" uid="uid://c0mc0r6m88auy" path="res://scenes/PlayerA.tscn" id="4_fc0e3"]
 
 [sub_resource type="Curve2D" id="Curve2D_feb5d"]
